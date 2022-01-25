@@ -10,8 +10,8 @@ const connectionURL = 'mongodb://127.0.0.1:27017';
 const databaseName = 'task-manager';
 
 const id = new ObjectID();
-console.log(id);
-console.log(id.getTimestamp());
+console.log(id.id.length);
+console.log(id.toHexString().length); // hex id is 24 in length where only generatedd it=d is 12 in length
 
 MongoClient.connect(
   connectionURL,
@@ -22,19 +22,19 @@ MongoClient.connect(
     }
     // console.log('Connected Correctly');
     const db = client.db(databaseName);
-    db.collection('users').insertOne(
-      {
-        _id: id,
-        name: 'Hulk',
-        age: 55,
-      },
-      (error, result) => {
-        if (error) {
-          return console.log('Connection Error');
-        }
-        console.log(result.ops);
-      }
-    );
+    // db.collection('users').insertOne(
+    //   {
+    //     _id: id,
+    //     name: 'Hulk',
+    //     age: 55,
+    //   },
+    //   (error, result) => {
+    //     if (error) {
+    //       return console.log('Connection Error');
+    //     }
+    //     console.log(result.ops);
+    //   }
+    // );
     // db.collection('tasks').insertMany(
     //   [
     //     {
