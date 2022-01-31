@@ -50,10 +50,15 @@ router.patch('/user/:id', async (req, res) => {
   }
 
   try {
-    const user = await User.findByIdAndUpdate(req.params.id, req.body, {
-      new: true,
-      runValidators: true,
-    });
+    // const user = await User.findByIdAndUpdate(req.params.id, req.body, {
+    //   new: true,
+    //   runValidators: true,
+    // });
+    // We have to make 3 line instead of above single line because we have to apply middleware for hasing the password when user created or updated just before save
+    const user = await User.findById(req.params.id);
+    updates.forEach((update) => (user[update] = req.body[update]));
+    await user.save();
+
     if (!user) {
       return res.status(404).send();
     }
