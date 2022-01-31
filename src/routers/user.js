@@ -2,7 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const User = require('../models/user');
 
-// Create Users
+// Create Users OR register User
 router.post('/users', async (req, res) => {
   const user = new User(req.body);
   try {
@@ -10,6 +10,19 @@ router.post('/users', async (req, res) => {
     res.status(201).send(user);
   } catch (e) {
     res.status(400).send(e);
+  }
+});
+
+// Logging in User
+router.post('/user/login', async (req, res) => {
+  try {
+    const user = await User.findByCredentials(
+      req.body.email,
+      req.body.password
+    );
+    res.send(user);
+  } catch (e) {
+    res.status(400).send();
   }
 });
 
