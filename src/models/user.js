@@ -50,6 +50,15 @@ const userSchema = new mongoose.Schema({
   ],
 });
 
+// Get Ready Public Profile For user
+userSchema.methods.toJSON = function () {
+  const user = this;
+  const userObject = user.toObject();
+  delete userObject.password;
+  delete userObject.tokens;
+  return userObject;
+};
+
 // Method for Generating Token, we are calling it for specific user
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
