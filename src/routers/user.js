@@ -1,6 +1,7 @@
 const express = require('express');
 const router = new express.Router();
 const User = require('../models/user');
+const auth = require('../middleware/auth');
 
 // Create Users OR register User
 router.post('/users', async (req, res) => {
@@ -28,14 +29,9 @@ router.post('/user/login', async (req, res) => {
   }
 });
 
-// Read All Users
-router.get('/users', async (req, res) => {
-  try {
-    const users = await User.find({});
-    res.send(users);
-  } catch (e) {
-    res.status(500).send();
-  }
+// Read Own Profile
+router.get('/users/me', auth, async (req, res) => {
+  res.send(req.user);
 });
 
 // Read Users by their ID
