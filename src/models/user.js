@@ -69,8 +69,10 @@ userSchema.methods.toJSON = function () {
 // Method for Generating Token, we are calling it for specific user
 userSchema.methods.generateAuthToken = async function () {
   const user = this;
+
   const token = jwt.sign({ _id: user._id.toString() }, 'thisisnewtoken');
   user.tokens = user.tokens.concat({ token });
+
   await user.save();
   return token;
 };
@@ -95,7 +97,8 @@ userSchema.statics.findByCredentials = async (email, password) => {
 // Hash the User password before saving
 userSchema.pre('save', async function (next) {
   const user = this;
-  console.log('just before saving');
+  // console.log('just before saving');
+
   if (user.isModified('password')) {
     user.password = await bcrypt.hash(user.password, 8);
   }
@@ -105,6 +108,7 @@ userSchema.pre('save', async function (next) {
 // Delete User Task when user is deleted
 userSchema.pre('remove', async function (next) {
   const user = this;
+
   await Task.deleteMany({ owner: user._id });
   next;
 });

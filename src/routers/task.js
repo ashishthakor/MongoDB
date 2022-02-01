@@ -8,8 +8,10 @@ router.post('/tasks', auth, async (req, res) => {
     ...req.body,
     owner: req.user._id,
   });
+
   try {
     await task.save();
+
     res.status(201).send(task);
   } catch (e) {
     res.status(400).send(e);
@@ -22,7 +24,9 @@ router.get('/tasks', auth, async (req, res) => {
     // const tasks = await Task.find({ owner: req.user._id });
     // res.send(tasks);
     // we can also do above method to get tasks
+
     await req.user.populate('tasks');
+
     res.send(req.user.tasks);
   } catch (e) {
     res.status(500).send();
@@ -32,6 +36,7 @@ router.get('/tasks', auth, async (req, res) => {
 // Read Tasks By their ID
 router.get('/task/:id', auth, async (req, res) => {
   const _id = req.params.id;
+
   try {
     // const task = await Task.findById(_id);
     const task = await Task.findOne({ _id, owner: req.user._id });
@@ -39,6 +44,7 @@ router.get('/task/:id', auth, async (req, res) => {
     if (!task) {
       return res.status(404).send();
     }
+
     res.send(task);
   } catch (e) {
     res.status(500).send();
@@ -49,9 +55,11 @@ router.get('/task/:id', auth, async (req, res) => {
 router.patch('/task/:id', auth, async (req, res) => {
   const updates = Object.keys(req.body);
   const allowedUpdates = ['description', 'completed'];
+
   const isValidOperation = updates.every((update) =>
     allowedUpdates.includes(update)
   );
+
   if (!isValidOperation) {
     return res.status(400).send({ error: 'Invalid Updates!' });
   }
