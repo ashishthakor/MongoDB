@@ -15,7 +15,7 @@ const auth = async (req, res, next) => {
     req.user = user;
     next();
 
-    console.log(token);
+    // console.log(token);
   } catch (e) {
     res.status(401).send('Please Authenticate');
   }
