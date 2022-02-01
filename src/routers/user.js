@@ -29,6 +29,31 @@ router.post('/user/login', async (req, res) => {
   }
 });
 
+// Logout for perticular user
+router.post('/users/logout', auth, async (req, res) => {
+  try {
+    req.user.tokens = req.user.tokens.filter(
+      (token) => token.token !== req.token
+    );
+
+    await req.user.save();
+    res.send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
+// Logout from all session
+router.post('/users/logoutAll', auth, async (req, res) => {
+  try {
+    req.user.tokens = [];
+    await req.user.save();
+    res.send();
+  } catch (e) {
+    res.status(500).send();
+  }
+});
+
 // Read Own Profile
 router.get('/users/me', auth, async (req, res) => {
   res.send(req.user);
