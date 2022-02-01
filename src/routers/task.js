@@ -18,14 +18,17 @@ router.post('/tasks', auth, async (req, res) => {
   }
 });
 
-// Read All Tasks
+// Read All Tasks --> GET /tasks?completed = true|false
 router.get('/tasks', auth, async (req, res) => {
+  const match = {};
+  if (req.query.completed) {
+    match.completed = req.query.completed === 'true';
+  }
   try {
-    // const tasks = await Task.find({ owner: req.user._id });
-    // res.send(tasks);
-    // we can also do above method to get tasks
-
-    await req.user.populate('tasks');
+    await req.user.populate({
+      path: 'tasks',
+      match,
+    });
 
     res.send(req.user.tasks);
   } catch (e) {
