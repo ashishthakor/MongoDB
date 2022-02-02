@@ -2,6 +2,7 @@ const express = require('express');
 const router = new express.Router();
 const User = require('../models/user');
 const auth = require('../middleware/auth');
+const multer = require('multer');
 
 // Create Users OR register User
 router.post('/users', async (req, res) => {
@@ -100,6 +101,17 @@ router.delete('/user/me', auth, async (req, res) => {
   } catch (e) {
     res.status(500).send();
   }
+});
+
+// Add a profile picture to user
+// POST /users/me/avatar
+// save images in avatars dictionary
+const upload = multer({
+  dest: 'avatars',
+});
+
+router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
+  res.send();
 });
 
 module.exports = router;
