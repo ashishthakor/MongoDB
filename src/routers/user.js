@@ -108,6 +108,16 @@ router.delete('/user/me', auth, async (req, res) => {
 // save images in avatars dictionary
 const upload = multer({
   dest: 'avatars',
+  limits: {
+    fileSize: 1000000,
+  },
+  fileFilter(req, file, cb) {
+    if (!file.originalname.match(/\.(jpg|jpeg|png)$/)) {
+      return cb(new Error('Please Upload an Image'));
+    }
+
+    cb(undefined, true);
+  },
 });
 
 router.post('/users/me/avatar', upload.single('avatar'), (req, res) => {
