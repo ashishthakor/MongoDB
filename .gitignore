@@ -1,2 +1,4 @@
 node_modules/
 config/
+playground/
+# "git rm -r --cached ." run this for clearing the catch then gitignore will work if it is not working right now
