@@ -27,7 +27,7 @@ beforeEach(async () => {
 
 // it will test create user task working properly or not
 test('should sign up new user', async () => {
-  await request(app)
+  const response = await request(app)
     .post('/users')
     .send({
       name: 'Ashish',
@@ -35,17 +35,33 @@ test('should sign up new user', async () => {
       password: 'ashish123',
     })
     .expect(201);
+
+  // Assert that the database was changed correctly
+  const user = await User.findById(response.body.user._id);
+  expect(user).not.toBeNull();
+
+  // Assertion about user body
+  expect(response.body).toMatchObject({
+    user: {
+      name: 'Ashish',
+      email: 'ashish.t@crestinfosystems.net',
+    },
+    token: user.tokens[0].token,
+  });
+  expect(user.password).not.toBe('ashish123');
 });
 
 // it will test login user route
 test('login existing user', async () => {
-  await request(app)
+  const response = await request(app)
     .post('/user/login')
     .send({
       email: userOne.email,
       password: userOne.password,
     })
     .expect(200);
+  const user = await User.findById(userOneId);
+  expect(response.body.token).toBe(user.tokens[1].token);
 });
 
 // it will test unauthenticated user try to login and it will recieve 400 status code which is correct
@@ -80,6 +96,8 @@ test('should delete account for user', async () => {
     .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
     .send()
     .expect(200);
+  const user = await User.findById(userOneId);
+  expect(user).toBeNull();
 });
 
 // it will test anauthenticated usr try to delete account
