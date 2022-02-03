@@ -2,6 +2,7 @@ const {
   calcTip,
   celsiusToFahrenheit,
   fahrenheitToCelsius,
+  add,
 } = require('../src/math');
 
 test('Should calculate total with tip', () => {
@@ -24,10 +25,21 @@ test('Should calculate fahrenheit 32 To Celsius 0', () => {
   expect(temp).toBe(0);
 });
 
-//
-// Goal: Test temperature conversion functions
-//
-// 1. Export both functions and load them into test suite
-// 2. Create "Should convert 32 F to 0 C"
-// 3. Create "Should convert 0 C to 32 F"
-// 4. Run the Jest to test your work!
+// test('Async test Demo', (done) => {
+//   setTimeout(() => {
+//     expect(1).toBe(2);
+//     done();
+//   }, 2000);
+// });
+
+test('should add 2 number', (done) => {
+  add(2, 3).then((sum) => {
+    expect(sum).toBe(5);
+    done();
+  });
+});
+
+test('should add two numbers async/await', async () => {
+  const sum = await add(10, 22);
+  expect(sum).toBe(32);
+});
