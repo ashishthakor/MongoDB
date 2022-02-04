@@ -1,29 +1,10 @@
 const request = require('supertest');
-const jwt = require('jsonwebtoken');
-const mongoose = require('mongoose');
-
 const app = require('../src/app');
 const User = require('../src/models/user');
-
-const userOneId = new mongoose.Types.ObjectId();
-
-const userOne = {
-  _id: userOneId,
-  name: 'mike',
-  email: 'mike@gmail.com',
-  password: 'mike123',
-  tokens: [
-    {
-      token: jwt.sign({ _id: userOneId }, process.env.JWT_SECRET),
-    },
-  ],
-};
+const { userOneId, userOne, setupDatabase } = require('./fixtures/db');
 
 // It will delete all the user in database and create userOne
-beforeEach(async () => {
-  await User.deleteMany();
-  await new User(userOne).save();
-});
+beforeEach(setupDatabase);
 
 // it will test create user task working properly or not
 test('should sign up new user', async () => {
