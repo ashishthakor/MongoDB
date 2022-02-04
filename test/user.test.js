@@ -104,3 +104,39 @@ test('should delete account for user', async () => {
 test('should not delete account for user', async () => {
   await request(app).delete('/user/me').send().expect(401);
 });
+
+// it will test to upload an image
+test('should upload avatar image', async () => {
+  await request(app)
+    .post('/users/me/avatar')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .attach('avatar', 'test/fixtures/profile-pic.jpg')
+    .expect(200);
+
+  const user = await User.findById(userOneId);
+  expect(user.avatar).toEqual(expect.any(Buffer));
+});
+
+// It will  update username
+test('should update valid user name', async () => {
+  await request(app)
+    .patch('/user/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+      name: 'Jess',
+    })
+    .expect(200);
+  const user = await User.findById(userOneId);
+  expect(user.name).toEqual('Jess');
+});
+
+// it will test to not update invalid field
+test('should mot update Invalid user field', async () => {
+  await request(app)
+    .patch('/user/me')
+    .set('Authorization', `Bearer ${userOne.tokens[0].token}`)
+    .send({
+      location: 'Surat',
+    })
+    .expect(400);
+});
